@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Freelance_Platform_Api", "Freelance_Platform_Api.csproj", "{FBC89142-4783-4C25-95B8-062398F44882}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "..\DataAccess\DataAccess.csproj", "{584D4C1A-79BA-4674-A7FF-9EE0E20B1D34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBC89142-4783-4C25-95B8-062398F44882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC89142-4783-4C25-95B8-062398F44882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC89142-4783-4C25-95B8-062398F44882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC89142-4783-4C25-95B8-062398F44882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{584D4C1A-79BA-4674-A7FF-9EE0E20B1D34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{584D4C1A-79BA-4674-A7FF-9EE0E20B1D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{584D4C1A-79BA-4674-A7FF-9EE0E20B1D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{584D4C1A-79BA-4674-A7FF-9EE0E20B1D34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9EC83DC6-EC27-4F16-B530-2C4FD70471E4}
+	EndGlobalSection
+EndGlobal
