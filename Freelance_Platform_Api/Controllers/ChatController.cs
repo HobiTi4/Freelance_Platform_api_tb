@@ -3,6 +3,7 @@ using DataAccess.Data;
 using DataAccess.Entities;
 using Freelance_Platform_Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Freelance_Platform_Api.Controllers
 {
@@ -22,17 +23,31 @@ namespace Freelance_Platform_Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(context.Chats.ToList());
+            var chats = context.Chats
+                .Include(c => c.Sender)
+                    .ThenInclude(u => u.Role)
+                .Include(c => c.Receiver)
+                    .ThenInclude(u => u.Role)
+                .ToList();
+            return Ok(chats);
         }
+
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var item = context.Chats.Find(id);
-            if (item == null) return NotFound();
+            var chat = context.Chats
+                .Include(c => c.Sender)
+                    .ThenInclude(u => u.Role)
+                .Include(c => c.Receiver)
+                    .ThenInclude(u => u.Role)
+                .FirstOrDefault(c => c.ChatId == id);
 
-            return Ok(item);
+            if (chat == null) return NotFound();
+
+            return Ok(chat);
         }
+
 
         [HttpPost]
         public IActionResult Create(CreateChatModel model)

@@ -3,6 +3,7 @@ using DataAccess.Data;
 using DataAccess.Entities;
 using Freelance_Platform_Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Freelance_Platform_Api.Controllers
 {
@@ -22,16 +23,26 @@ namespace Freelance_Platform_Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(context.Transactions.ToList());
+            var transactions = context.Transactions
+                .Include(t => t.User)
+                    .ThenInclude(u => u.Role)
+                .ToList();
+
+            return Ok(transactions);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var item = context.Transactions.Find(id);
-            if (item == null) return NotFound();
+            var transaction = context.Transactions
+                .Include(t => t.User)
+                    .ThenInclude(u => u.Role)
+                .FirstOrDefault(t => t.TransactionId == id);
 
-            return Ok(item);
+            if (transaction == null)
+                return NotFound();
+
+            return Ok(transaction);
         }
 
         [HttpPost]
@@ -41,26 +52,5 @@ namespace Freelance_Platform_Api.Controllers
             context.SaveChanges();
             return Created();
         }
-
-        [HttpPut]
-        public IActionResult Edit(Transaction model)
-        {
-            context.Transactions.Update(model);
-            context.SaveChanges();
-
-            return Ok();
-        }
-        [HttpDelete]
-        public IActionResult Delete(int id)
-        {
-            var item = context.Transactions.Find(id);
-            if (item == null) return NotFound();
-
-            context.Transactions.Remove(item);
-            context.SaveChanges();
-
-            return NoContent();
-        }
-
     }
 }

@@ -3,6 +3,7 @@ using DataAccess.Data;
 using DataAccess.Entities;
 using Freelance_Platform_Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Freelance_Platform_Api.Controllers
 {
@@ -22,16 +23,30 @@ namespace Freelance_Platform_Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(context.Reviews.ToList());
+            var reviews = context.Reviews
+                .Include(r => r.Sender)
+                    .ThenInclude(u => u.Role)
+                .Include(r => r.Receiver)
+                    .ThenInclude(u => u.Role)
+                .ToList();
+
+            return Ok(reviews);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var item = context.Reviews.Find(id);
-            if (item == null) return NotFound();
+            var review = context.Reviews
+                .Include(r => r.Sender)
+                    .ThenInclude(u => u.Role)
+                .Include(r => r.Receiver)
+                    .ThenInclude(u => u.Role)
+                .FirstOrDefault(r => r.ReviewId == id);
 
-            return Ok(item);
+            if (review == null)
+                return NotFound();
+
+            return Ok(review);
         }
 
         [HttpPost]

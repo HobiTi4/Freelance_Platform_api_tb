@@ -3,6 +3,7 @@ using DataAccess.Data;
 using DataAccess.Entities;
 using Freelance_Platform_Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Freelance_Platform_Api.Controllers
 {
@@ -22,23 +23,39 @@ namespace Freelance_Platform_Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(context.Projects.ToList());
+            var projects = context.Projects
+                .Include(p => p.Client)
+                    .ThenInclude(u => u.Role)
+                .Include(p => p.Freelancer)
+                    .ThenInclude(u => u.Role)
+                .ToList();
+
+            return Ok(projects);
         }
+
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var item = context.Projects.Find(id);
-            if (item == null) return NotFound();
+            var project = context.Projects
+                .Include(p => p.Client)
+                    .ThenInclude(u => u.Role)
+                .Include(p => p.Freelancer)
+                    .ThenInclude(u => u.Role)
+                .FirstOrDefault(p => p.ProjectId == id);
 
-            return Ok(item);
+            if (project == null) return NotFound();
+
+            return Ok(project);
         }
+
 
         [HttpPost]
         public IActionResult Create(CreateProjectModel model)
         {
             context.Projects.Add(mapper.Map<Project>(model));
             context.SaveChanges();
+
             return Created();
         }
 

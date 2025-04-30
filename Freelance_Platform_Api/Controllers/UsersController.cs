@@ -4,6 +4,7 @@ using DataAccess.Data;
 using DataAccess.Entities;
 using AutoMapper;
 using Freelance_Platform_Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Freelance_Platform_Api.Controllers
 {
@@ -23,13 +24,20 @@ namespace Freelance_Platform_Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(context.Users.ToList());
+            var users = context.Users
+                               .Include(u => u.Role)
+                               .ToList();
+            return Ok(users);
         }
+
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var item = context.Users.Find(id);
+            var item = context.Users
+                              .Include(u => u.Role)
+                              .FirstOrDefault(u => u.UserID == id);
+
             if (item == null) return NotFound();
 
             return Ok(item);
@@ -49,7 +57,7 @@ namespace Freelance_Platform_Api.Controllers
             context.Users.Update(model);
             context.SaveChanges();
 
-            return Ok(); // 200
+            return Ok(); 
         }
         [HttpDelete]
         public IActionResult Delete(int id)

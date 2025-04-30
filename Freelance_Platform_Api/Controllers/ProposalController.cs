@@ -3,6 +3,7 @@ using DataAccess.Data;
 using DataAccess.Entities;
 using Freelance_Platform_Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Freelance_Platform_Api.Controllers
 {
@@ -22,17 +23,29 @@ namespace Freelance_Platform_Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(context.Proposals.ToList());
+            var proposals = context.Proposals
+                .Include(p => p.Freelancer)
+                    .ThenInclude(u => u.Role)
+                .Include(p => p.Project)
+                .ToList();
+
+            return Ok(proposals);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var item = context.Proposals.Find(id);
-            if (item == null) return NotFound();
+            var proposal = context.Proposals
+                .Include(p => p.Freelancer)
+                    .ThenInclude(u => u.Role)
+                .Include(p => p.Project)
+                .FirstOrDefault(p => p.ProposalId == id);
 
-            return Ok(item);
+            if (proposal == null) return NotFound();
+
+            return Ok(proposal);
         }
+
 
         [HttpPost]
         public IActionResult Create(CreateProposalModel model)
@@ -50,6 +63,7 @@ namespace Freelance_Platform_Api.Controllers
 
             return Ok();
         }
+
         [HttpDelete]
         public IActionResult Delete(int id)
         {
